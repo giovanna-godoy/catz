@@ -1,60 +1,76 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
+  <div class="general">
+    <h1 class="title">{{ title }}</h1>
+    <input type="search" class="filter" v-on:input="filter = $event.target.value" placeholder="Filtre pelo título da foto">
+    <ul class="photo-list">
+      <li class="photo-list-item" v-for="photo in filteredPhotos"  v-bind:key="photo.id">
+        <Panel :title="photo.title">
+            <ResponsiveImage :url="photo.url" :title="photo.title"/>
+        </Panel>
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
+import Panel from "./components/shared/panel/Panel.vue";
+import ResponsiveImage from "./components/shared/responsive-image/ResponsiveImage.vue";
+
 export default {
-  name: 'app',
-  data () {
+  components: {
+    'Panel': Panel,
+    'ResponsiveImage': ResponsiveImage
+  },
+  data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      title: 'Picz',
+      photos: [],
+      filter: ''
     }
-  }
+  },
+  computed: {
+    filteredPhotos() {
+      if (this.filter) {
+        let exp = new RegExp(this.filter.trim(), 'i');
+        return this.photos.filter(photo => exp.test(photo.title));
+      } else {
+        return this.photos;
+      }
+    }
+  },
+  created() {
+    this.$http.get('http://localhost:3000/v1/photos')
+      .then(res =>res.json())
+      .then(photos => this.photos = photos, err => console.log("ERROR"))
+  },
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.general {
+  font-family: Helvetica, sans-serif;
+  margin: 0 auto;
+  width: 96%;
 }
 
-h1, h2 {
-  font-weight: normal;
+.title {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+.photo-list {
+  list-style: none;
 }
 
-li {
+.photo-list .photo-list-item {
   display: inline-block;
-  margin: 0 10px;
 }
 
-a {
-  color: #42b983;
+.title {
+  text-align: center;
+}
+
+.filter {
+  display: block;
+  width: 100%;
 }
 </style>
