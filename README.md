@@ -1,4 +1,4 @@
-# catz
+# Picz
 
 > A Vue.js project
 
