@@ -1,14 +1,6 @@
 <template>
   <div class="general">
-    <h1 class="title">{{ title }}</h1>
-    <input type="search" class="filter" v-on:input="filter = $event.target.value" placeholder="Filtre pelo título da foto">
-    <ul class="photo-list">
-      <li class="photo-list-item" v-for="photo in filteredPhotos"  v-bind:key="photo.id">
-        <Panel :title="photo.title">
-            <ResponsiveImage :url="photo.url" :title="photo.title"/>
-        </Panel>
-      </li>
-    </ul>
+   
   </div>
 </template>
 
@@ -51,26 +43,5 @@ export default {
   font-family: Helvetica, sans-serif;
   margin: 0 auto;
   width: 96%;
-}
-
-.title {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.photo-list {
-  list-style: none;
-}
-
-.photo-list .photo-list-item {
-  display: inline-block;
-}
-
-.title {
-  text-align: center;
-}
-
-.filter {
-  display: block;
-  width: 100%;
 }
 </style>
