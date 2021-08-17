@@ -1,40 +1,26 @@
 <template>
   <div class="general">
+    <nav>
+      <ul>       
+          <li v-for="route in routes" :key="route.title">
+            <router-link :to="route.path ? route.path : '/'">{{route.title}}</router-link>
+          </li>
+      </ul>
+    </nav>
+
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Panel from "./components/shared/panel/Panel.vue";
-import ResponsiveImage from "./components/shared/responsive-image/ResponsiveImage.vue";
+import { routes }  from './routes';
 
 export default {
-  components: {
-    'Panel': Panel,
-    'ResponsiveImage': ResponsiveImage
-  },
   data() {
     return {
-      title: 'Picz',
-      photos: [],
-      filter: ''
+      routes
     }
-  },
-  computed: {
-    filteredPhotos() {
-      if (this.filter) {
-        let exp = new RegExp(this.filter.trim(), 'i');
-        return this.photos.filter(photo => exp.test(photo.title));
-      } else {
-        return this.photos;
-      }
-    }
-  },
-  created() {
-    this.$http.get('http://localhost:3000/v1/photos')
-      .then(res =>res.json())
-      .then(photos => this.photos = photos, err => console.log("ERROR"))
-  },
+  }
 }
 </script>
 
